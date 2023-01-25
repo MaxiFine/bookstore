@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+from environs import Env
+
+env =  Env()
+env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,9 +27,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-v59uh)odb5to_rg9fv+x&5*v-2pc)yi)cw&ya!!82w_15^x%9l'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+DEBUG = env.bool("DJANGO_DEBUG")
+ALLOWED_HOSTS = ['.herokuapp.com', 'localhost', '127.0.0.1'] # new
 
 
 # Application definition
@@ -48,6 +51,7 @@ INSTALLED_APPS = [
     # apps
     'accounts',
     'pages',
+    'books',
 ]
 
 # user model
@@ -91,16 +95,10 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'db',
-        'PORT': 5432
-
-    }
+    "default": env.dj_db_url("DATABASE_URL",
+    default="postgres://postgres@db/postgres")
 }
+
 
 
 # Password validation
@@ -168,4 +166,7 @@ ACCOUNT_EMAIL_REQUIRED = True # new
 ACCOUNT_UNIQUE_EMAIL = True # new
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# email sender
+DEFAULT_FROM_EMAIL = 'admin@djangobookstore.com'
 
