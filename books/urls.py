@@ -6,3 +6,4 @@ urlpatterns = [
     path('<uuid:pk>/', BookDetailView.as_view(), name='book_detail'), # new
 ]
 
+
